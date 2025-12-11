@@ -1,270 +1,1018 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Arockia Wilfread - React Native Developer</title>
     <script src="https://kit.fontawesome.com/ea6ec7f9ff.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -200px;
+            left: -200px;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -50px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 5%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .menu-icon {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        /* Hero Section */
+        #header {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header-text {
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .header-text p {
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-text h1 {
+            font-size: 4rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .header-text h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-text h2 {
+            font-size: 2rem;
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+        }
+
+        .header-text .summary {
+            color: var(--text-dim);
+            max-width: 900px;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-secondary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .skill-category {
+            background: var(--dark-light);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .skill-category h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .skill-tag {
+            background: var(--dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Experience Section */
+        .experience-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .experience-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+        }
+
+        .experience-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 2rem;
+        }
+
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 3px solid var(--dark);
+        }
+
+        .experience-header {
+            background: var(--dark-light);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .experience-header h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .experience-header .role {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .experience-header .date {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .experience-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .experience-content li {
+            padding: 0.8rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .experience-content li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .experience-content strong {
+            color: var(--text);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background: var(--dark-light);
+            padding: 2rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        .project-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .project-card p {
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-badge {
+            background: var(--dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        /* Portfolio Section */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .portfolio-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            height: 400px;
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(236, 72, 153, 0.9));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .portfolio-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .portfolio-overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Education Section */
+        .education-card {
+            background: var(--dark-light);
+            padding: 2rem;
+            border-radius: 20px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .education-card h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .education-card .degree {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .education-card .date {
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .education-card .cgpa {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Contact Section */
+        #contact {
+            background: var(--dark-light);
+            border-radius: 20px;
+            padding: 4rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .contact-item a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            transform: translateY(-5px);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--dark);
+            background: var(--dark);
+            color: var(--text);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-dim);
+            margin-top: 5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                width: 250px;
+                background: var(--dark-light);
+                flex-direction: column;
+                padding: 5rem 2rem;
+                transition: right 0.3s ease;
+            }
+
+            nav ul.active {
+                right: 0;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+
+            .header-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .header-text h2 {
+                font-size: 1.5rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .experience-timeline {
+                padding-left: 1rem;
+            }
+
+            .experience-item {
+                padding-left: 1.5rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <div id="header">
-        <div class="container">
-            <nav>
-                <img src="Wilfread12-removebg-preview.png" class="logo">
-                <i class="fa-solid fa-bars" onclick="openmenu()"></i>
-                <ul id="sidemenu">
-                    <li><a href="#header">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#portfolio">Portfolio</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <i class="fa-solid fa-xmark" onclick="closemenu()"></i>
-                </ul>
-                <!-- <i class="fa-solid fa-bars" onclick="openmenu()"></i> -->
-            </nav>
+    <div class="bg-animation"></div>
+
+    <nav id="navbar">
+        <div class="logo">Wilfread</div>
+        <ul id="menu">
+            <li><a href="#header">Home</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <i class="fa-solid fa-bars menu-icon" onclick="toggleMenu()"></i>
+    </nav>
+
+    <section id="header">
+        <div class="header-content">
             <div class="header-text">
-                <p>Hello, It's Me</p>
-                <h1><span>Arockia Wilfread</span><br>Mobile App Developer. </h1>
+                <p>Hello, I'm</p>
+                <h1><span>Arockia Wilfread</span></h1>
+                <h2>React Native Developer</h2>
+                <p class="summary">
+                    Results-driven <strong>React Native Frontend Developer</strong> with 2+ years of experience in building high-quality, cross-platform mobile applications using React Native, JavaScript/TypeScript, Redux, and Expo. Skilled in developing responsive UI components, integrating REST APIs, implementing authentication flows, and optimizing app performance for smooth user experiences.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#contact" class="btn btn-primary">Get In Touch</a>
+                    <a href="./Wilfread.pdf" download class="btn btn-secondary">Download CV</a>
+                </div>
             </div>
         </div>
+    </section>
 
-    </div>
-    <!-- -------------------about-------------- -->
-    <div id="about">
-        <div class="container">
-            <div class="row">
-                <div class="about-col-1">
-                    <img src="wilfread.jpg">
+    <section id="skills">
+        <h2 class="section-title">Technical Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-category">
+                <h3><i class="fa-solid fa-code"></i> Languages</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">TypeScript</span>
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">SQL</span>
+                    <span class="skill-tag">HTML</span>
+                    <span class="skill-tag">CSS</span>
                 </div>
-                <div class="about-col-2">
-                    <h1 class="sub-title">About Me</h1>
-                    <h3>
-                        <p>Software Engineering Graduate with a passion for innovation and problem-solving. With 1.5
-                            years of experience as a front-end developer, I specialize in transforming ideas into
-                            engaging and responsive mobile applications. Skilled in React Native, HTML, CSS, and
-                            JavaScript, I am committed to delivering high-performance, user-friendly solutions. With
-                            excellent communication skills, a collaborative mindset, and a drive for continuous
-                            learning, I thrive in dynamic environments. Eager to contribute meaningfully to innovative
-                            projects, I am excited to embark on a journey in the tech industry and make a positive
-                            impact. </p>
-                    </h3>
-                    <div class="tab-titles">
-                        <p class="tab-links active-link" onclick="opentab('skills')">Skills</p>
-                        <p class="tab-links" onclick="opentab('experience')">Experience</p>
-                        <p class="tab-links" onclick="opentab('education')">Education</p>
-                    </div>
-                    <div class="tab-contents active-tab" id="skills">
-                        <ul>
-                            <li><span>FrontEnd Developer</span><br>Designing Web/App interface</li>
-                            <li><span>Mobile App Developer</span><br>Building Applications </li>
-                            <li><span>React Native Developer</span><br>Architect high-quality React Native applications
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="tab-contents" id="experience">
-                        <ul>
-                            <li><span>July 2023 - October 2023</span><br>Completed a 3 months internship in
-                                AllDirectionSource Technologies pvt ltd.</li>
-                            <li><span>2023 - current</span><br>Full time Employee(Mobile app Developer) at
-                                AllDirectionSource Technologies pvt ltd.</li>
-                        </ul>
-                    </div>
-                    <div class="tab-contents" id="education">
-                        <ul>
-                            <li><span>2022</span><br>B.E.Mechanical Engineering from Anna University, Tuticorin campus
-                            </li>
-                            <li><span>2018</span><br>St Francis Xavier’s Hr. Sec. School,Thoothukudi. </li>
-                            <li><span>2016</span><br>St Francis Xavier’s Hr. Sec. School,Thoothukudi. </li>
-                        </ul>
-                    </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fa-solid fa-laptop-code"></i> Technologies</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">React Native</span>
+                    <span class="skill-tag">React.js</span>
+                    <span class="skill-tag">Next.js</span>
+                    <span class="skill-tag">Redux</span>
+                    <span class="skill-tag">Expo</span>
+                    <span class="skill-tag">Material UI</span>
                 </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fa-solid fa-database"></i> Databases</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">PostgreSQL</span>
+                    <span class="skill-tag">MongoDB</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fa-solid fa-tools"></i> Tools & Version Control</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Git</span>
+                    <span class="skill-tag">GitHub</span>
+                    <span class="skill-tag">GitLab</span>
+                    <span class="skill-tag">Postman</span>
+                    <span class="skill-tag">NPM</span>
+                    <span class="skill-tag">Yarn</span>
+                    <span class="skill-tag">PgAdmin</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            </div>
-        </div>
-    </div>
-    <!-- -----------------Services---------------------->
-    <div id="services">
-        <div class="container">
-            <h1 class="sub-title">My services</h1>
-            <div class="services-list">
-                <div>
-                    <i class="fa-solid fa-code"></i>
-                    <h2>FrontEnd Developer</h2>
-                    <p>Equipped with a solid understanding of HTML, CSS, and JavaScript, I have hands-on experience
-                        building responsive and interactive websites. I'm well-versed in modern frontend frameworks and
-                        libraries like React.js, constantly exploring emerging technologies to stay ahead of industry
-                        trends. My projects often prioritize user experience and accessibility, ensuring seamless
-                        navigation across various devices and browsers.</p>
-                    <a href="#">Learn more</a>
+    <section id="experience">
+        <h2 class="section-title">Professional Experience</h2>
+        <div class="experience-timeline">
+            <div class="experience-item">
+                <div class="experience-header">
+                    <h3>Aaytham Consulting</h3>
+                    <div class="role">React Native Developer</div>
+                    <div class="date">June 2025 - Present</div>
                 </div>
-                <div>
-                    <i class="fa-solid fa-crop-simple"></i>
-                    <h2>Mobile App Developer</h2>
-                    <p>Experienced React Native Developer with a strong command over JavaScript and React.js. Skilled in
-                        cross-platform mobile app development, API integration, and troubleshooting. Eager to contribute
-                        expertise to innovative projects and deliver exceptional user experiences.</p>
-                    <a href="#">Learn more</a>
-                </div>
-                <div>
-                    <i class="fa-brands fa-app-store"></i>
-                    <h2>ReactNative Developer</h2>
-                    <p>Dynamic and experienced React Native Developer proficient in building cross-platform mobile and
-                        web applications. Skilled in React Native framework, JavaScript, HTML, CSS, and responsive web
-                        design. Extensive experience in developing scalable and high-performance applications for both
-                        iOS and Android platforms. Eager to contribute expertise to innovative projects and deliver
-                        exceptional user experiences.</p>
-                    <a href="#">Learn more</a>
+                <div class="experience-content">
+                    <ul>
+                        <li>Developed cross-platform mobile architecture using <strong>React Native</strong> for consistent UI/UX across Android and iOS</li>
+                        <li>Integrated backend REST APIs with secure authentication flows, state management (<strong>Redux / Context API</strong>), and error-handling strategies</li>
+                        <li>Developed social media sharing functionality using <strong>React Native Share</strong> for X (Twitter), WhatsApp, Facebook and Instagram, increasing organic engagement</li>
+                        <li>Built and published production-grade mobile apps <strong>PlanPol Voice</strong> and <strong>PlanPol Booth</strong> on the <strong>Google Play Store</strong> and <strong>Apple App Store</strong></li>
+                        <li>Optimized app performance by implementing lazy-loading, memoization, and reducing re-renders, resulting in <strong>30% improvement</strong> in initial app load time</li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </div>
-    <!----------Portfolio------------------>
-    <div id="portfolio">
-        <div class="container">
-            <h1 class="sub-title">My Work</h1>
-            <div class="work-list">
-                <div class="work">
-                    <img src="work1.png">
-                    <div class="layer">
-                        <h3>Restaurant site</h3>
-                        <p>Responsive Food and Restaurant website designed from HTML,CSS and JavaScript.</p>
-                        <a href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                    </div>
-                </div>
-                <div class="work">
-                    <img src="work2.png">
-                    <div class="layer">
-                        <h3>Portfolio</h3>
-                        <p>An evolving collection of your work that reflects your talents, skills, experiences, and
-                            professional accomplishments.which designed from HTML,CSS and JavaScript.</p>
-                        <a href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                    </div>
-                </div>
-                <div class="work">
-                    <img src="work3.png">
-                    <div class="layer">
-                        <h3>Gender and Age Detection</h3>
-                        <p>An image Processing project from which the age and gender of an individual is identified from
-                            trained data sets.</p>
-                        <a href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                    </div>
-                </div>
-            </div>
-            <a href="#" class="btn">See More</a>
-        </div>
-    </div>
-    <!-------------contact---------------------------->
-    <div id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="contact-left">
-                    <h1 class="sub-title">Contact Me</h1>
-                    <p>
-                        <a href="mailto:wilfread2001@gmail.com">
-                            <i class="fa-solid fa-paper-plane"></i> wilfread2001@gmail.com
-                        </a>
-                    </p>
-                    <p>
-                        <a href="tel:8015260521">
-                            <i class="fa-solid fa-phone-volume"></i> 8015260521
-                        </a>
-                    </p>
 
-                    <div class="social-icons">
-                        <i class="fa-brands fa-facebook"></i>
-                        <i class="fa-brands fa-twitter"></i>
-                        <a href="https://www.instagram.com/mr._.wilfread._.offl/"><i
-                                class="fa-brands fa-instagram"></i></a>
-                        <a href="https://www.linkedin.com/in/arockia-wilfread-j-77abb6223"><i
-                                class="fa-brands fa-linkedin"></i></a>
-
-                    </div>
-                    <a href='./Wilfread.pdf' download class="btn btn2">Download CV</a>
+            <div class="experience-item">
+                <div class="experience-header">
+                    <h3>Alldirectionsource Technologies Pvt. Ltd</h3>
+                    <div class="role">React Native Developer</div>
+                    <div class="date">October 2023 - May 2025</div>
                 </div>
-                <div class="contact-right">
-                    <form id="contact-form" name="submit-to-google-sheet">
-                        <input type="text" name="Name" placeholder="Your Name" required>
-                        <input type="email" name="email" placeholder="Your Email" required>
-                        <textarea name="Message" rows="6" placeholder="Your Message" required></textarea>
-                        <button type="submit" class="btn btn2">Submit</button>
-                    </form>
-                    <span id="msg"></span>
+                <div class="experience-content">
+                    <ul>
+                        <li><strong>Creaudit – Data Management App:</strong> Developed using React Native, Java, MongoDB supporting lease administration, document management, workflows, analytics, and automated alerts. Published on Play Store and App Store</li>
+                        <li><strong>Fettello – Insurance App:</strong> Built using React Native, Node.js, MongoDB with policy management, claims, e-card, and downloads. Published on Play Store and App Store</li>
+                        <li><strong>BookMySlot – Meeting Scheduler:</strong> Developed using React Native, Java, PostgreSQL with Google, Apple, and Outlook calendar integration. Published on Play Store and App Store</li>
+                        <li><strong>Medflic – Doctor App:</strong> Created using React Native, Express.js, MongoDB supporting doctor discovery, appointment booking, and health records. Published on Play Store and App Store</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <div class="experience-header">
+                    <h3>Alldirectionsource Technologies Pvt. Ltd</h3>
+                    <div class="role">React Native Developer Intern</div>
+                    <div class="date">July 2023 - September 2023</div>
+                </div>
+                <div class="experience-content">
+                    <ul>
+                        <li>Developed and maintained UI modules using React, HTML, JavaScript, and CSS</li>
+                        <li>Achieved <strong>100% client satisfaction</strong> by delivering all daily tasks on time</li>
+                        <li>Optimized performance by troubleshooting, debugging, and refactoring code</li>
+                        <li>Participated in requirements meetings and contributed to software design discussions</li>
+                        <li>Improved development processes and contributed to team code quality</li>
+                    </ul>
                 </div>
             </div>
         </div>
-        <div class="copyright">
-            <p>Copyright &copy Wilfread Made with<i class="fa-solid fa-heart"></i>Mobile App Developer
+    </section>
+
+    <section id="projects">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3>PlanPol Voice & Booth</h3>
+                <p>Cross-platform mobile applications for political sentiment tracking with audio recording, speech-to-text processing, and social media integration.</p>
+                <div class="project-tech">
+                    <span class="tech-badge">React Native</span>
+                    <span class="tech-badge">Redux</span>
+                    <span class="tech-badge">REST API</span>
+                    <span class="tech-badge">Play Store</span>
+                    <span class="tech-badge">App Store</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3>Creaudit</h3>
+                <p>Comprehensive data management solution for lease administration with document management, workflows, and analytics.</p>
+                <div class="project-tech">
+                    <span class="tech-badge">React Native</span>
+                    <span class="tech-badge">Java</span>
+                    <span class="tech-badge">MongoDB</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3>Fettello</h3>
+                <p>Insurance management application with policy tracking, claims processing, and digital insurance cards.</p>
+                <div class="project-tech">
+                    <span class="tech-badge">React Native</span>
+                    <span class="tech-badge">Node.js</span>
+                    <span class="tech-badge">MongoDB</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3>BookMySlot</h3>
+                <p>Meeting scheduler with seamless calendar integration across Google, Apple, and Outlook platforms.</p>
+                <div class="project-tech">
+                    <span class="tech-badge">React Native</span>
+                    <span class="tech-badge">Java</span>
+                    <span class="tech-badge">PostgreSQL</span>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3>Medflic</h3>
+                <p>Healthcare application connecting patients with doctors, featuring appointment booking and health records management.</p>
+                <div class="project-tech">
+                    <span class="tech-badge">React Native</span>
+                    <span class="tech-badge">Express.js</span>
+                    <span class="tech-badge">MongoDB</span>
+                </div>
+            </div>
         </div>
-    </div>
-    </p>
-    </div>
-    </div>
+    </section>
+
+    <section id="portfolio">
+        <h2 class="section-title">Additional Work</h2>
+        <div class="portfolio-grid">
+            <!-- <div class="portfolio-item">
+                <img src="work1.png" alt="Restaurant Website" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%231e293b%22 width=%22400%22 height=%22300%22/%3E%3C/svg%3E'">
+                <div class="portfolio-overlay">
+                    <h3>Restaurant Site</h3>
+                    <p>Responsive Food and Restaurant website designed with HTML, CSS and JavaScript</p>
+                </div>
+            </div> -->
+            <div class="portfolio-item">
+                <img src="work2.png" alt="Portfolio" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%231e293b%22 width=%22400%22 height=%22300%22/%3E%3C/svg%3E'">
+                <div class="portfolio-overlay">
+                    <h3>Portfolio</h3>
+                    <p>An evolving collection showcasing talents, skills, and professional accomplishments</p>
+                </div>
+            </div>
+            <!-- <div class="portfolio-item">
+                <img src="work3.png" alt="Gender and Age Detection" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%231e293b%22 width=%22400%22 height=%22300%22/%3E%3C/svg%3E'">
+                <div class="portfolio-overlay">
+                    <h3>Gender & Age Detection</h3>
+                    <p>Image Processing project identifying age and gender from trained datasets</p>
+                </div>
+            </div> -->
+        </div>
+    </section>
+
+    <section id="education">
+        <h2 class="section-title">Education</h2>
+        <div class="education-card">
+            <h3>VOC College of Engineering, Anna University</h3>
+            <div class="degree">Bachelor of Engineering - Mechanical Engineering</div>
+            <div class="date">2018 - 2022</div>
+            <div class="cgpa">CGPA: 7.55/10</div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <a href="mailto:wilfread2001@gmail.com">wilfread2001@gmail.com</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-phone-volume"></i>
+                    <a href="tel:8015260521">8015260521</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Chennai, Tamil Nadu, India</span>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/mr._.wilfread._.offl/"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/arockia-wilfread-j-77abb6223"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+            <form class="contact-form" name="submit-to-google-sheet">
+                <input type="text" name="Name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="Message" placeholder="Your Message" required></textarea>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>Copyright © 2024 Arockia Wilfread. Made with <i class="fa-solid fa-heart" style="color: #ec4899;"></i> by a React Native Developer</p>
+    </footer>
+
     <script>
-
-        var tablinks = document.getElementsByClassName("tab-links");
-        var tabcontents = document.getElementsByClassName("tab-contents");
-        function opentab(tabname) {
-            for (tablink of tablinks) {
-                tablink.classList.remove("active-link");
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
             }
-            for (tabcontent of tabcontents) {
-                tabcontent.classList.remove("active-tab");
-            }
-            event.currentTarget.classList.add("active-link");
-            document.getElementById(tabname).classList.add("active-tab");
-
-
-
-        }
-
-        document.getElementById('contact-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-            var data = new FormData(event.target);
-            fetch("https://formspree.io/f/meqylbvp", {
-                method: 'post',
-                body: data,
-            }).then(response => {
-                if (response.ok) {
-                    alert('success')
-                } else {
-                    alert('Error')
-                }
-            })
         });
-        document.getElementById('contact-form').reset();
-    </script>
-    <script>
-        var sidemenu = document.getElementById("sidemenu");
-        function openmenu() {
-            sidemenu.style.right = "0";
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            document.getElementById('menu').classList.toggle('active');
         }
 
-        function closemenu() {
-            sidemenu.style.right = "-200px";
-        }
-    </script>
-    <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxQd4ID1MEdgBZDv0larqVOebRCQ45cuLP8ZvYg21MdHm51U4kFMQi0XhL3K8bTJxj4/exec'
-        const form = document.forms['submit-to-google-sheet']
-        const msg = document.getElementById("msg")
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.getElementById('menu').classList.remove('active');
+                }
+            });
+        });
+
+        // Form submission
+        const form = document.forms['submit-to-google-sheet'];
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxQd4ID1MEdgBZDv0larqVOebRCQ45cuLP8ZvYg21MdHm51U4kFMQi0XhL3K8bTJxj4/exec';
+        
         form.addEventListener('submit', e => {
-            e.preventDefault()
+            e.preventDefault();
             fetch(scriptURL, { method: 'POST', body: new FormData(form) })
                 .then(response => {
-                    msg.innerHTML = "Message Sent Successfully"
-                    setTimeout(function () {
-                        msg.innerHTML = ""
-                    }, 5000)
-                    form.reset()
+                    alert('Message sent successfully!');
+                    form.reset();
                 })
-                .catch(error => console.error('Error!', error.message))
-        })
+                .catch(error => console.error('Error!', error.message));
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections for animation
+        document.querySelectorAll('section').forEach(section => {
+            if (section.id !== 'header') {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'all 0.6s ease';
+                observer.observe(section);
+            }
+        });
     </script>
-
 </body>
-
 </html>
