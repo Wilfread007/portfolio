@@ -1,783 +1,564 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arockia Wilfread - React Native Developer</title>
-    <script src="https://kit.fontawesome.com/ea6ec7f9ff.js" crossorigin="anonymous"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --accent: #ec4899;
-            --dark: #0f172a;
-            --dark-light: #1e293b;
-            --text: #e2e8f0;
-            --text-dim: #94a3b8;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--dark);
-            color: var(--text);
-            overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .bg-animation {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        }
-
-        .bg-animation::before {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            top: -250px;
-            right: -250px;
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .bg-animation::after {
-            content: '';
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            bottom: -200px;
-            left: -200px;
-            animation: float 15s infinite ease-in-out reverse;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -50px) rotate(120deg); }
-            66% { transform: translate(-20px, 20px) rotate(240deg); }
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            width: 100%;
-            padding: 1.5rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        nav.scrolled {
-            padding: 1rem 5%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            cursor: pointer;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        nav ul li a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        nav ul li a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            transition: width 0.3s ease;
-        }
-
-        nav ul li a:hover::after {
-            width: 100%;
-        }
-
-        .menu-icon {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text);
-        }
-
-        /* Hero Section */
-        #header {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 0 5%;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .header-text {
-            opacity: 0;
-            animation: fadeInUp 1s ease forwards;
-        }
-
-        .header-text p {
-            color: var(--text-dim);
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .header-text h1 {
-            font-size: 4rem;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-
-        .header-text h1 span {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header-text h2 {
-            font-size: 2rem;
-            color: var(--text-dim);
-            margin-bottom: 1.5rem;
-        }
-
-        .header-text .summary {
-            color: var(--text-dim);
-            max-width: 900px;
-            line-height: 1.8;
-            margin-bottom: 2rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.6);
-        }
-
-        .btn-secondary {
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Section Styles */
-        section {
-            padding: 5rem 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        /* Skills Section */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .skill-category {
-            background: var(--dark-light);
-            padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .skill-category:hover {
-            border-color: var(--primary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
-        }
-
-        .skill-category h3 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-        }
-
-        .skill-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-
-        .skill-tag {
-            background: var(--dark);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: var(--text);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .skill-tag:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-            transform: scale(1.05);
-        }
-
-        /* Experience Section */
-        .experience-timeline {
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .experience-timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(180deg, var(--primary), var(--accent));
-        }
-
-        .experience-item {
-            position: relative;
-            margin-bottom: 3rem;
-            padding-left: 2rem;
-        }
-
-        .experience-item::before {
-            content: '';
-            position: absolute;
-            left: -2.5rem;
-            top: 0;
-            width: 12px;
-            height: 12px;
-            background: var(--primary);
-            border-radius: 50%;
-            border: 3px solid var(--dark);
-        }
-
-        .experience-header {
-            background: var(--dark-light);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin-bottom: 1rem;
-            border-left: 4px solid var(--primary);
-        }
-
-        .experience-header h3 {
-            color: var(--primary);
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .experience-header .role {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .experience-header .date {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-
-        .experience-content ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .experience-content li {
-            padding: 0.8rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
-
-        .experience-content li::before {
-            content: '▹';
-            position: absolute;
-            left: 0;
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-
-        .experience-content strong {
-            color: var(--text);
-        }
-
-        /* Projects Section */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .project-card {
-            background: var(--dark-light);
-            padding: 2rem;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.3);
-        }
-
-        .project-card h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .project-card p {
-            color: var(--text-dim);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .tech-badge {
-            background: var(--dark);
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            color: var(--primary);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-        }
-
-        /* Portfolio Section */
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .portfolio-item {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            cursor: pointer;
-            height: 400px;
-        }
-
-        .portfolio-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .portfolio-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(236, 72, 153, 0.9));
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .portfolio-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .portfolio-item:hover .portfolio-overlay {
-            opacity: 1;
-        }
-
-        .portfolio-overlay h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Education Section */
-        .education-card {
-            background: var(--dark-light);
-            padding: 2rem;
-            border-radius: 20px;
-            border-left: 4px solid var(--primary);
-            margin-bottom: 2rem;
-        }
-
-        .education-card h3 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .education-card .degree {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .education-card .date {
-            color: var(--text-dim);
-            margin-bottom: 0.5rem;
-        }
-
-        .education-card .cgpa {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Contact Section */
-        #contact {
-            background: var(--dark-light);
-            border-radius: 20px;
-            padding: 4rem;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .contact-item i {
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-
-        .contact-item a {
-            color: var(--text);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .contact-item a:hover {
-            color: var(--primary);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .social-links a {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text);
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            transform: translateY(-5px);
-        }
-
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .contact-form input,
-        .contact-form textarea {
-            padding: 1rem;
-            border-radius: 10px;
-            border: 1px solid var(--dark);
-            background: var(--dark);
-            color: var(--text);
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .contact-form input:focus,
-        .contact-form textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .contact-form textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-dim);
-            margin-top: 5rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            nav ul {
-                position: fixed;
-                right: -100%;
-                top: 0;
-                height: 100vh;
-                width: 250px;
-                background: var(--dark-light);
-                flex-direction: column;
-                padding: 5rem 2rem;
-                transition: right 0.3s ease;
-            }
-
-            nav ul.active {
-                right: 0;
-            }
-
-            .menu-icon {
-                display: block;
-            }
-
-            .header-text h1 {
-                font-size: 2.5rem;
-            }
-
-            .header-text h2 {
-                font-size: 1.5rem;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-            }
-
-            .experience-timeline {
-                padding-left: 1rem;
-            }
-
-            .experience-item {
-                padding-left: 1.5rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arockia Wilfread — React Native Developer</title>
+<meta name="description" content="Arockia Wilfread — React Native Developer with 3+ years shipping cross-platform iOS & Android apps.">
+<script src="https://kit.fontawesome.com/ea6ec7f9ff.js" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+        --bg: #0a0c11;
+        --surface: #12151d;
+        --surface-2: #171b25;
+        --border: rgba(94, 234, 212, 0.14);
+        --border-strong: rgba(94, 234, 212, 0.35);
+        --text: #e7eaf2;
+        --text-dim: #8a93a8;
+        --mint: #5eead4;
+        --mint-dim: #2fa393;
+        --amber: #fcd34d;
+        --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+        --sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+        --radius: 16px;
+        --status-h: 34px;
+        --tabbar-h: 76px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: var(--sans);
+        background: var(--bg);
+        color: var(--text);
+        overflow-x: hidden;
+        padding-top: var(--status-h);
+        padding-bottom: var(--tabbar-h);
+    }
+
+    /* Ambient glow background */
+    .bg-glow {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: var(--bg);
+    }
+    .bg-glow::before {
+        content: '';
+        position: absolute;
+        width: 620px;
+        height: 620px;
+        background: radial-gradient(circle, rgba(94, 234, 212, 0.10) 0%, transparent 70%);
+        border-radius: 50%;
+        top: -280px;
+        right: -220px;
+    }
+    .bg-glow::after {
+        content: '';
+        position: absolute;
+        width: 480px;
+        height: 480px;
+        background: radial-gradient(circle, rgba(252, 211, 77, 0.06) 0%, transparent 70%);
+        border-radius: 50%;
+        bottom: -180px;
+        left: -180px;
+    }
+
+    /* -------- Status bar (device chrome, top) -------- */
+    .status-bar {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: var(--status-h);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1.25rem;
+        background: rgba(10, 12, 17, 0.85);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--text-dim);
+        letter-spacing: 0.02em;
+    }
+    .status-bar .clock { color: var(--text); font-weight: 600; }
+    .status-icons { display: flex; align-items: center; gap: 0.5rem; }
+    .status-icons svg { width: 15px; height: 11px; display: block; }
+
+    /* -------- Bottom tab bar (device chrome, primary nav) -------- */
+    .tab-bar {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        height: var(--tabbar-h);
+        z-index: 1000;
+        display: flex;
+        background: rgba(15, 18, 26, 0.92);
+        backdrop-filter: blur(16px);
+        border-top: 1px solid var(--border);
+        padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .tab-bar a {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        text-decoration: none;
+        color: var(--text-dim);
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.03em;
+        position: relative;
+        transition: color 0.25s ease;
+    }
+    .tab-bar a i { font-size: 1.15rem; transition: transform 0.25s ease; }
+    .tab-bar a.active { color: var(--mint); }
+    .tab-bar a.active i { transform: translateY(-2px); }
+    .tab-bar a.active::before {
+        content: '';
+        position: absolute;
+        top: 2px;
+        width: 4px; height: 4px;
+        border-radius: 50%;
+        background: var(--mint);
+        box-shadow: 0 0 8px var(--mint);
+    }
+
+    main { max-width: 1160px; margin: 0 auto; padding: 0 5%; }
+
+    section { padding: 5.5rem 0; }
+
+    .eyebrow {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--mint);
+        background: rgba(94, 234, 212, 0.08);
+        border: 1px solid var(--border);
+        padding: 0.3rem 0.75rem;
+        border-radius: 999px;
+        margin-bottom: 1rem;
+    }
+
+    .section-title {
+        font-family: var(--mono);
+        font-size: 2.1rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin-bottom: 2.75rem;
+    }
+
+    /* -------- Hero / Home screen -------- */
+    #home {
+        min-height: calc(100vh - var(--status-h) - var(--tabbar-h));
+        display: flex;
+        align-items: center;
+        padding-top: 3rem;
+    }
+    .hero-grid { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: start; margin-bottom: 2.25rem; }
+    .avatar {
+        width: 68px; height: 68px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, var(--mint), var(--mint-dim));
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--mono); font-weight: 800; font-size: 1.4rem;
+        color: #06110f;
+        box-shadow: 0 8px 30px rgba(94, 234, 212, 0.25);
+        flex-shrink: 0;
+    }
+    .hero-eyebrow-line { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.4rem; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 8px var(--mint); }
+    .hero-kicker { font-family: var(--mono); color: var(--text-dim); font-size: 0.85rem; letter-spacing: 0.04em; }
+
+    .hero-text h1 {
+        font-family: var(--mono);
+        font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+    }
+    .hero-text h1 .accent { color: var(--mint); }
+    .role-pill {
+        display: inline-block;
+        font-family: var(--sans);
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--text);
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        padding: 0.4rem 1rem;
+        border-radius: 999px;
+        margin-bottom: 1.5rem;
+    }
+
+    .summary {
+        color: var(--text-dim);
+        max-width: 680px;
+        line-height: 1.75;
+        font-size: 1.02rem;
+        margin-bottom: 2rem;
+    }
+    .summary strong { color: var(--text); font-weight: 700; }
+
+    .cta-buttons { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 2.75rem; }
+    .btn {
+        padding: 0.85rem 1.6rem;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+        cursor: pointer;
+        font-family: var(--sans);
+    }
+    .btn-primary { background: var(--mint); color: #06110f; box-shadow: 0 8px 24px rgba(94, 234, 212, 0.28); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(94, 234, 212, 0.4); }
+    .btn-secondary { border: 1.5px solid var(--border-strong); color: var(--text); background: transparent; }
+    .btn-secondary:hover { background: var(--surface-2); transform: translateY(-2px); }
+
+    /* Stat widgets */
+    .widgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.9rem; max-width: 620px; }
+    .widget {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.1rem 1.25rem;
+    }
+    .widget .num { font-family: var(--mono); font-size: 1.6rem; font-weight: 800; color: var(--mint); }
+    .widget .label { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.15rem; }
+
+    /* -------- Skills -------- */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.25rem; }
+    .skill-category {
+        background: var(--surface);
+        padding: 1.6rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        transition: all 0.25s ease;
+    }
+    .skill-category:hover { border-color: var(--border-strong); transform: translateY(-4px); }
+    .skill-category h3 {
+        font-family: var(--mono);
+        color: var(--mint);
+        margin-bottom: 1.1rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        display: flex; align-items: center; gap: 0.5rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+    .skill-tag {
+        background: var(--bg);
+        padding: 0.4rem 0.85rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-family: var(--mono);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+
+    /* -------- Experience -------- */
+    .experience-timeline { position: relative; padding-left: 2rem; }
+    .experience-timeline::before {
+        content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px;
+        background: linear-gradient(180deg, var(--mint), transparent);
+    }
+    .experience-item { position: relative; margin-bottom: 2.75rem; padding-left: 1.75rem; }
+    .experience-item:last-child { margin-bottom: 0; }
+    .experience-item::before {
+        content: ''; position: absolute; left: -2.55rem; top: 6px;
+        width: 11px; height: 11px; background: var(--mint); border-radius: 50%;
+        border: 3px solid var(--bg); box-shadow: 0 0 0 1px var(--border-strong);
+    }
+    .experience-header {
+        background: var(--surface);
+        padding: 1.35rem 1.5rem;
+        border-radius: var(--radius);
+        margin-bottom: 1rem;
+        border-left: 3px solid var(--mint);
+    }
+    .experience-header h3 { font-family: var(--mono); color: var(--text); font-size: 1.15rem; margin-bottom: 0.35rem; }
+    .experience-header .role { font-weight: 700; color: var(--mint); font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .experience-header .date { color: var(--text-dim); font-size: 0.82rem; font-family: var(--mono); }
+    .experience-content ul { list-style: none; }
+    .experience-content li {
+        padding: 0.55rem 0 0.55rem 1.4rem;
+        position: relative;
+        color: var(--text-dim);
+        line-height: 1.65;
+        font-size: 0.95rem;
+    }
+    .experience-content li::before { content: '›'; position: absolute; left: 0; color: var(--mint); font-weight: 700; }
+    .experience-content strong { color: var(--text); }
+    .metric-tag {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--amber);
+        background: rgba(252, 211, 77, 0.08);
+        border: 1px solid rgba(252, 211, 77, 0.25);
+        padding: 0.15rem 0.5rem;
+        border-radius: 6px;
+        margin-left: 0.25rem;
+    }
+
+    /* -------- Projects (app-store style cards) -------- */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.25rem; }
+    .project-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        transition: all 0.25s ease;
+    }
+    .project-card:hover { transform: translateY(-6px); border-color: var(--border-strong); box-shadow: 0 16px 40px rgba(0,0,0,0.35); }
+    .project-top { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem; }
+    .app-icon {
+        width: 44px; height: 44px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--mono); font-weight: 800; font-size: 0.95rem;
+        color: #06110f; flex-shrink: 0;
+    }
+    .project-card h3 { font-family: var(--mono); font-size: 1.05rem; color: var(--text); }
+    .project-card .store-tag { font-size: 0.72rem; color: var(--text-dim); font-family: var(--mono); }
+    .project-card p { color: var(--text-dim); line-height: 1.6; font-size: 0.9rem; margin-bottom: 1rem; }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tech-badge {
+        background: var(--bg); padding: 0.25rem 0.65rem; border-radius: 6px;
+        font-size: 0.72rem; font-family: var(--mono); color: var(--mint);
+        border: 1px solid var(--border);
+    }
+
+    /* -------- Education -------- */
+    .education-card {
+        background: var(--surface); padding: 1.75rem; border-radius: var(--radius);
+        border-left: 3px solid var(--mint);
+    }
+    .education-card h3 { font-family: var(--mono); color: var(--text); font-size: 1.15rem; margin-bottom: 0.4rem; }
+    .education-card .degree { font-size: 0.95rem; margin-bottom: 0.4rem; color: var(--text-dim); }
+    .education-card .date { color: var(--text-dim); font-family: var(--mono); font-size: 0.82rem; margin-bottom: 0.5rem; }
+    .education-card .cgpa { color: var(--amber); font-weight: 700; font-family: var(--mono); font-size: 0.85rem; }
+
+    /* -------- Contact (message composer motif) -------- */
+    #contact-panel {
+        background: var(--surface);
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        padding: 2.5rem;
+    }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+    .contact-item { display: flex; align-items: center; gap: 1rem; }
+    .contact-item .icon-badge {
+        width: 40px; height: 40px; border-radius: 10px; background: var(--bg);
+        border: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--mint); flex-shrink: 0;
+    }
+    .contact-item a, .contact-item span { color: var(--text); text-decoration: none; font-size: 0.95rem; }
+    .contact-item a:hover { color: var(--mint); }
+
+    .social-links { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+    .social-links a {
+        width: 44px; height: 44px; border-radius: 12px; background: var(--bg);
+        border: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--text); transition: all 0.25s ease; text-decoration: none;
+    }
+    .social-links a:hover { background: var(--mint); border-color: var(--mint); color: #06110f; transform: translateY(-3px); }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-form input, .contact-form textarea {
+        padding: 0.9rem 1rem; border-radius: 12px; border: 1px solid var(--border);
+        background: var(--bg); color: var(--text); font-size: 0.92rem; font-family: var(--sans);
+        transition: border-color 0.25s ease;
+    }
+    .contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: var(--mint); }
+    .contact-form textarea { resize: vertical; min-height: 130px; }
+
+    footer { text-align: center; padding: 2.5rem 0 1rem; color: var(--text-dim); font-size: 0.82rem; font-family: var(--mono); }
+    footer .build { color: var(--mint); }
+
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+        outline: 2px solid var(--mint); outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+        html { scroll-behavior: auto; }
+    }
+
+    @media (max-width: 768px) {
+        .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+        .hero-grid { grid-template-columns: 1fr; }
+        .avatar { width: 56px; height: 56px; border-radius: 16px; }
+        section { padding: 3.5rem 0; }
+        .tab-bar a span { display: none; }
+        .tab-bar a i { font-size: 1.3rem; }
+    }
+</style>
 </head>
 <body>
-    <div class="bg-animation"></div>
+<div class="bg-glow"></div>
 
-    <nav id="navbar">
-        <div class="logo">Wilfread</div>
-        <ul id="menu">
-            <li><a href="#header">Home</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#portfolio">Portfolio</a></li>
-            <li><a href="#education">Education</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <i class="fa-solid fa-bars menu-icon" onclick="toggleMenu()"></i>
-    </nav>
+<div class="status-bar">
+    <span class="clock" id="clock">9:41</span>
+    <div class="status-icons">
+        <span id="statusLabel">rn --status ok</span>
+        <svg viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 8L4 5M4 5L7 8M4 5V10M9 6L12 3M12 3L15 6M12 3V10" stroke="#5eead4" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 22 11" fill="none" aria-hidden="true"><rect x="1" y="1" width="18" height="9" rx="2" stroke="#5eead4" stroke-width="1.2"/><rect x="2.5" y="2.5" width="12" height="6" rx="1" fill="#5eead4"/><rect x="20" y="3.5" width="1.5" height="4" rx="0.7" fill="#5eead4"/></svg>
+    </div>
+</div>
 
-    <section id="header">
-        <div class="header-content">
-            <div class="header-text">
-                <p>Hello, I'm</p>
-                <h1><span>Arockia Wilfread</span></h1>
-                <h2>React Native Developer</h2>
+<main>
+    <section id="home">
+        <div class="hero-grid">
+            <div class="avatar" aria-hidden="true">AW</div>
+            <div class="hero-text">
+                <div class="hero-eyebrow-line">
+                    <span class="status-dot"></span>
+                    <span class="hero-kicker">// open to opportunities</span>
+                </div>
+                <h1>Arockia <span class="accent">Wilfread</span></h1>
+                <span class="role-pill">React Native Developer</span>
                 <p class="summary">
-                    Results-driven <strong>React Native Frontend Developer</strong> with 2+ years of experience in building high-quality, cross-platform mobile applications using React Native, JavaScript/TypeScript, Redux, and Expo. Skilled in developing responsive UI components, integrating REST APIs, implementing authentication flows, and optimizing app performance for smooth user experiences.
+                    I design and ship <strong>cross-platform iOS &amp; Android apps</strong> with React Native — from architecture to App Store release. <strong>3+ years</strong> building production mobile products with TypeScript, Redux/Zustand, GraphQL, and Expo, backed by CI/CD pipelines (EAS, Fastlane) and a habit of shipping apps that don't crash.
                 </p>
                 <div class="cta-buttons">
-                    <a href="#contact" class="btn btn-primary">Get In Touch</a>
-                    <a href="./Wilfread.pdf" download class="btn btn-secondary">Download CV</a>
+                    <a href="#contact" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Get In Touch</a>
+                    <a href="./Arockia_Wilfread_React_Native_Resume.pdf" download class="btn btn-secondary"><i class="fa-solid fa-download"></i> Download Resume</a>
+                </div>
+                <div class="widgets">
+                    <div class="widget"><div class="num">3+</div><div class="label">Years Experience</div></div>
+                    <div class="widget"><div class="num">10+</div><div class="label">Apps Shipped</div></div>
+                    <div class="widget"><div class="num">99.2%</div><div class="label">Crash-Free Sessions</div></div>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="skills">
+        <span class="eyebrow">Screen 02</span>
         <h2 class="section-title">Technical Skills</h2>
         <div class="skills-grid">
             <div class="skill-category">
                 <h3><i class="fa-solid fa-code"></i> Languages</h3>
                 <div class="skill-tags">
                     <span class="skill-tag">TypeScript</span>
-                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">JavaScript (ES6+)</span>
                     <span class="skill-tag">SQL</span>
                     <span class="skill-tag">HTML</span>
                     <span class="skill-tag">CSS</span>
                 </div>
             </div>
             <div class="skill-category">
-                <h3><i class="fa-solid fa-laptop-code"></i> Technologies</h3>
+                <h3><i class="fa-solid fa-mobile-screen-button"></i> Mobile &amp; Frameworks</h3>
                 <div class="skill-tags">
                     <span class="skill-tag">React Native</span>
+                    <span class="skill-tag">Expo</span>
                     <span class="skill-tag">React.js</span>
                     <span class="skill-tag">Next.js</span>
-                    <span class="skill-tag">Redux</span>
-                    <span class="skill-tag">Expo</span>
-                    <span class="skill-tag">Material UI</span>
+                    <span class="skill-tag">React Navigation</span>
                 </div>
             </div>
             <div class="skill-category">
-                <h3><i class="fa-solid fa-database"></i> Databases</h3>
+                <h3><i class="fa-solid fa-diagram-project"></i> State Management</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Redux</span>
+                    <span class="skill-tag">Redux Toolkit</span>
+                    <span class="skill-tag">Zustand</span>
+                    <span class="skill-tag">Context API</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fa-solid fa-plug"></i> APIs &amp; Integration</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">REST API</span>
+                    <span class="skill-tag">GraphQL</span>
+                    <span class="skill-tag">WebSockets</span>
+                    <span class="skill-tag">Firebase</span>
+                    <span class="skill-tag">AWS Amplify</span>
+                    <span class="skill-tag">OTP / JWT Auth</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fa-solid fa-rocket"></i> CI/CD &amp; Deployment</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">EAS Build/Submit</span>
+                    <span class="skill-tag">Fastlane</span>
+                    <span class="skill-tag">Google Play Console</span>
+                    <span class="skill-tag">App Store Connect</span>
+                    <span class="skill-tag">OTA Updates</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fa-solid fa-vial"></i> Testing &amp; QA</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Jest</span>
+                    <span class="skill-tag">RNTL</span>
+                    <span class="skill-tag">Detox</span>
+                    <span class="skill-tag">Unit Testing</span>
+                    <span class="skill-tag">E2E Testing</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fa-solid fa-bolt"></i> Specialized</h3>
+                <div class="skill-tags">
+                    <span class="skill-tag">Bluetooth</span>
+                    <span class="skill-tag">Push Notifications (FCM)</span>
+                    <span class="skill-tag">Offline-First Sync</span>
+                    <span class="skill-tag">Speech-to-Text</span>
+                    <span class="skill-tag">Reanimated 2</span>
+                    <span class="skill-tag">Hermes Engine</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fa-solid fa-database"></i> Tools &amp; Databases</h3>
                 <div class="skill-tags">
                     <span class="skill-tag">PostgreSQL</span>
                     <span class="skill-tag">MongoDB</span>
-                </div>
-            </div>
-            <div class="skill-category">
-                <h3><i class="fa-solid fa-tools"></i> Tools & Version Control</h3>
-                <div class="skill-tags">
-                    <span class="skill-tag">Git</span>
-                    <span class="skill-tag">GitHub</span>
-                    <span class="skill-tag">GitLab</span>
+                    <span class="skill-tag">Git / GitHub / GitLab</span>
                     <span class="skill-tag">Postman</span>
-                    <span class="skill-tag">NPM</span>
-                    <span class="skill-tag">Yarn</span>
-                    <span class="skill-tag">PgAdmin</span>
+                    <span class="skill-tag">Figma</span>
+                    <span class="skill-tag">NPM / Yarn</span>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="experience">
+        <span class="eyebrow">Screen 03</span>
         <h2 class="section-title">Professional Experience</h2>
         <div class="experience-timeline">
             <div class="experience-item">
                 <div class="experience-header">
                     <h3>Aaytham Consulting</h3>
                     <div class="role">React Native Developer</div>
-                    <div class="date">June 2025 - Present</div>
+                    <div class="date">June 2025 — Present</div>
                 </div>
                 <div class="experience-content">
                     <ul>
-                        <li>Developed cross-platform mobile architecture using <strong>React Native</strong> for consistent UI/UX across Android and iOS</li>
-                        <li>Integrated backend REST APIs with secure authentication flows, state management (<strong>Redux / Context API</strong>), and error-handling strategies</li>
-                        <li>Developed social media sharing functionality using <strong>React Native Share</strong> for X (Twitter), WhatsApp, Facebook and Instagram, increasing organic engagement</li>
-                        <li>Built and published production-grade mobile apps <strong>PlanPol Voice</strong> and <strong>PlanPol Booth</strong> on the <strong>Google Play Store</strong> and <strong>Apple App Store</strong></li>
-                        <li>Optimized app performance by implementing lazy-loading, memoization, and reducing re-renders, resulting in <strong>30% improvement</strong> in initial app load time</li>
+                        <li>Architected cross-platform mobile UI infrastructure with <strong>React Native</strong>, delivering consistent iOS/Android UX and reusable component patterns.</li>
+                        <li>Integrated <strong>REST &amp; GraphQL APIs</strong> with Redux/Context API state management and secure <strong>JWT</strong> authentication flows for real-time political sentiment data.</li>
+                        <li>Built and published <strong>PlanPol Voice</strong> &amp; <strong>PlanPol Booth</strong> to Google Play Store and Apple App Store, managing <strong>EAS/Fastlane</strong> CI/CD pipelines, OTA updates, and code signing.</li>
+                        <li>Developed <strong>Isihat</strong>, a hospital management system (Next.js, Java, PostgreSQL) with role-based access for admins, doctors, and staff.</li>
+                        <li>Added social sharing (X, WhatsApp, Facebook, Instagram), audio recording, and speech-to-text; improved app load time <span class="metric-tag">+30%</span> via lazy-loading and memoization.</li>
+                        <li>Covered the codebase with <strong>Jest, RNTL &amp; Detox</strong> tests, improving overall app stability <span class="metric-tag">+40%</span>.</li>
                     </ul>
                 </div>
             </div>
@@ -786,233 +567,195 @@
                 <div class="experience-header">
                     <h3>Alldirectionsource Technologies Pvt. Ltd</h3>
                     <div class="role">React Native Developer</div>
-                    <div class="date">October 2023 - May 2025</div>
+                    <div class="date">July 2023 — May 2025</div>
                 </div>
                 <div class="experience-content">
                     <ul>
-                        <li><strong>Creaudit – Data Management App:</strong> Developed using React Native, Java, MongoDB supporting lease administration, document management, workflows, analytics, and automated alerts. Published on Play Store and App Store</li>
-                        <li><strong>Fettello – Insurance App:</strong> Built using React Native, Node.js, MongoDB with policy management, claims, e-card, and downloads. Published on Play Store and App Store</li>
-                        <li><strong>BookMySlot – Meeting Scheduler:</strong> Developed using React Native, Java, PostgreSQL with Google, Apple, and Outlook calendar integration. Published on Play Store and App Store</li>
-                        <li><strong>Medflic – Doctor App:</strong> Created using React Native, Express.js, MongoDB supporting doctor discovery, appointment booking, and health records. Published on Play Store and App Store</li>
+                        <li><strong>Creaudit — Data Management:</strong> React Native, Java, MongoDB; lease administration, document management, workflows, analytics, automated alerts. Published on Play Store &amp; App Store.</li>
+                        <li><strong>Fettello — Insurance App:</strong> React Native, Node.js, MongoDB; policy management, claims processing, digital e-card, offline-first data sync. Published on Play Store &amp; App Store.</li>
+                        <li><strong>BookMySlot — Scheduler:</strong> React Native, Java, PostgreSQL; Google, Apple &amp; Outlook calendar integration with slot-based conflict resolution. Published on Play Store &amp; App Store.</li>
+                        <li><strong>Medflic — Doctor App:</strong> React Native, Express.js, MongoDB; doctor discovery, appointment booking, real-time chat, health records. Published on Play Store &amp; App Store.</li>
+                        <li>Cut average bundle size <span class="metric-tag">-25%</span> via asset optimization and Hermes engine adoption; shared component library across 4 apps cut UI dev time <span class="metric-tag">-35%</span>.</li>
+                        <li>Integrated Firebase Analytics, Crashlytics &amp; FCM push notifications, lifting crash-free sessions to <span class="metric-tag">99.2%</span>.</li>
                     </ul>
                 </div>
             </div>
 
-            <div class="experience-item">
-                <div class="experience-header">
-                    <h3>Alldirectionsource Technologies Pvt. Ltd</h3>
-                    <div class="role">React Native Developer Intern</div>
-                    <div class="date">July 2023 - September 2023</div>
-                </div>
-                <div class="experience-content">
-                    <ul>
-                        <li>Developed and maintained UI modules using React, HTML, JavaScript, and CSS</li>
-                        <li>Achieved <strong>100% client satisfaction</strong> by delivering all daily tasks on time</li>
-                        <li>Optimized performance by troubleshooting, debugging, and refactoring code</li>
-                        <li>Participated in requirements meetings and contributed to software design discussions</li>
-                        <li>Improved development processes and contributed to team code quality</li>
-                    </ul>
-                </div>
-            </div>
         </div>
     </section>
 
     <section id="projects">
+        <span class="eyebrow">Screen 04</span>
         <h2 class="section-title">Featured Projects</h2>
         <div class="projects-grid">
             <div class="project-card">
-                <h3>PlanPol Voice & Booth</h3>
-                <p>Cross-platform mobile applications for political sentiment tracking with audio recording, speech-to-text processing, and social media integration.</p>
-                <div class="project-tech">
-                    <span class="tech-badge">React Native</span>
-                    <span class="tech-badge">Redux</span>
-                    <span class="tech-badge">REST API</span>
-                    <span class="tech-badge">Play Store</span>
-                    <span class="tech-badge">App Store</span>
+                <div class="project-top">
+                    <div class="app-icon" style="background:linear-gradient(135deg,#5eead4,#2fa393);">PP</div>
+                    <div><h3>PlanPol Voice &amp; Booth</h3><div class="store-tag">Play Store · App Store</div></div>
                 </div>
+                <p>Political sentiment tracking apps with audio recording, speech-to-text, and social sharing.</p>
+                <div class="project-tech"><span class="tech-badge">React Native</span><span class="tech-badge">Redux</span><span class="tech-badge">REST API</span></div>
             </div>
-
             <div class="project-card">
-                <h3>Creaudit</h3>
-                <p>Comprehensive data management solution for lease administration with document management, workflows, and analytics.</p>
-                <div class="project-tech">
-                    <span class="tech-badge">React Native</span>
-                    <span class="tech-badge">Java</span>
-                    <span class="tech-badge">MongoDB</span>
+                <div class="project-top">
+                    <div class="app-icon" style="background:linear-gradient(135deg,#fcd34d,#c9971f);">IS</div>
+                    <div><h3>Isihat</h3><div class="store-tag">Web · Hospital Mgmt</div></div>
                 </div>
+                <p>End-to-end hospital management: registration, scheduling, billing, and role-based records.</p>
+                <div class="project-tech"><span class="tech-badge">Next.js</span><span class="tech-badge">Java</span><span class="tech-badge">PostgreSQL</span></div>
             </div>
-
             <div class="project-card">
-                <h3>Fettello</h3>
-                <p>Insurance management application with policy tracking, claims processing, and digital insurance cards.</p>
-                <div class="project-tech">
-                    <span class="tech-badge">React Native</span>
-                    <span class="tech-badge">Node.js</span>
-                    <span class="tech-badge">MongoDB</span>
+                <div class="project-top">
+                    <div class="app-icon" style="background:linear-gradient(135deg,#93c5fd,#3b82f6);">CR</div>
+                    <div><h3>Creaudit</h3><div class="store-tag">Play Store · App Store</div></div>
                 </div>
+                <p>Data management platform for lease administration with workflows and analytics.</p>
+                <div class="project-tech"><span class="tech-badge">React Native</span><span class="tech-badge">Java</span><span class="tech-badge">MongoDB</span></div>
             </div>
-
             <div class="project-card">
-                <h3>BookMySlot</h3>
-                <p>Meeting scheduler with seamless calendar integration across Google, Apple, and Outlook platforms.</p>
-                <div class="project-tech">
-                    <span class="tech-badge">React Native</span>
-                    <span class="tech-badge">Java</span>
-                    <span class="tech-badge">PostgreSQL</span>
+                <div class="project-top">
+                    <div class="app-icon" style="background:linear-gradient(135deg,#f9a8d4,#db2777);">FT</div>
+                    <div><h3>Fettello</h3><div class="store-tag">Play Store · App Store</div></div>
                 </div>
+                <p>Insurance app with policy tracking, claims processing, and digital insurance cards.</p>
+                <div class="project-tech"><span class="tech-badge">React Native</span><span class="tech-badge">Node.js</span><span class="tech-badge">MongoDB</span></div>
             </div>
-
             <div class="project-card">
-                <h3>Medflic</h3>
-                <p>Healthcare application connecting patients with doctors, featuring appointment booking and health records management.</p>
-                <div class="project-tech">
-                    <span class="tech-badge">React Native</span>
-                    <span class="tech-badge">Express.js</span>
-                    <span class="tech-badge">MongoDB</span>
+                <div class="project-top">
+                    <div class="app-icon" style="background:linear-gradient(135deg,#c4b5fd,#7c3aed);">BS</div>
+                    <div><h3>BookMySlot</h3><div class="store-tag">Play Store · App Store</div></div>
                 </div>
+                <p>Scheduler with seamless Google, Apple, and Outlook calendar integration.</p>
+                <div class="project-tech"><span class="tech-badge">React Native</span><span class="tech-badge">Java</span><span class="tech-badge">PostgreSQL</span></div>
             </div>
-        </div>
-    </section>
-
-    <section id="portfolio">
-        <h2 class="section-title">Additional Work</h2>
-        <div class="portfolio-grid">
-            <!-- <div class="portfolio-item">
-                <img src="work1.png" alt="Restaurant Website" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%231e293b%22 width=%22400%22 height=%22300%22/%3E%3C/svg%3E'">
-                <div class="portfolio-overlay">
-                    <h3>Restaurant Site</h3>
-                    <p>Responsive Food and Restaurant website designed with HTML, CSS and JavaScript</p>
+            <div class="project-card">
+                <div class="project-top">
+                    <div class="app-icon" style="background:linear-gradient(135deg,#86efac,#16a34a);">MF</div>
+                    <div><h3>Medflic</h3><div class="store-tag">Play Store · App Store</div></div>
                 </div>
-            </div> -->
-            <div class="portfolio-item">
-                <img src="work2.png" alt="Portfolio" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%231e293b%22 width=%22400%22 height=%22300%22/%3E%3C/svg%3E'">
-                <div class="portfolio-overlay">
-                    <h3>Portfolio</h3>
-                    <p>An evolving collection showcasing talents, skills, and professional accomplishments</p>
-                </div>
+                <p>Healthcare app connecting patients with doctors: booking, chat, and health records.</p>
+                <div class="project-tech"><span class="tech-badge">React Native</span><span class="tech-badge">Express.js</span><span class="tech-badge">MongoDB</span></div>
             </div>
-            <!-- <div class="portfolio-item">
-                <img src="work3.png" alt="Gender and Age Detection" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%231e293b%22 width=%22400%22 height=%22300%22/%3E%3C/svg%3E'">
-                <div class="portfolio-overlay">
-                    <h3>Gender & Age Detection</h3>
-                    <p>Image Processing project identifying age and gender from trained datasets</p>
-                </div>
-            </div> -->
         </div>
     </section>
 
     <section id="education">
+        <span class="eyebrow">Screen 05</span>
         <h2 class="section-title">Education</h2>
         <div class="education-card">
             <h3>VOC College of Engineering, Anna University</h3>
-            <div class="degree">Bachelor of Engineering - Mechanical Engineering</div>
-            <div class="date">2018 - 2022</div>
-            <div class="cgpa">CGPA: 7.55/10</div>
+            <div class="degree">Bachelor of Engineering — Mechanical Engineering</div>
+            <div class="date">2018 — 2022</div>
+            <div class="cgpa">CGPA: 7.55 / 10</div>
         </div>
     </section>
 
     <section id="contact">
+        <span class="eyebrow">Screen 06</span>
         <h2 class="section-title">Get In Touch</h2>
-        <div class="contact-grid">
-            <div class="contact-info">
-                <div class="contact-item">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <a href="mailto:wilfread2001@gmail.com">wilfread2001@gmail.com</a>
+        <div id="contact-panel">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="icon-badge"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></span>
+                        <a href="mailto:wilfread2001@gmail.com">wilfread2001@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <span class="icon-badge"><i class="fa-solid fa-phone-volume" aria-hidden="true"></i></span>
+                        <a href="tel:+918015260521">+91 80152 60521</a>
+                    </div>
+                    <div class="contact-item">
+                        <span class="icon-badge"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
+                        <span>Chennai, Tamil Nadu, India</span>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/arockia-wilfread-j-77abb6223" aria-label="LinkedIn profile"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a>
+                        <a href="https://www.instagram.com/mr._.wilfread._.offl/" aria-label="Instagram profile"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+                        <a href="mailto:wilfread2001@gmail.com" aria-label="Send an email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <i class="fa-solid fa-phone-volume"></i>
-                    <a href="tel:8015260521">8015260521</a>
-                </div>
-                <div class="contact-item">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <span>Chennai, Tamil Nadu, India</span>
-                </div>
-                <div class="social-links">
-                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/mr._.wilfread._.offl/"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/in/arockia-wilfread-j-77abb6223"><i class="fa-brands fa-linkedin"></i></a>
-                </div>
+                <form class="contact-form" name="submit-to-google-sheet" aria-label="Contact form">
+                    <input type="text" name="Name" placeholder="Your Name" aria-label="Your name" required>
+                    <input type="email" name="email" placeholder="Your Email" aria-label="Your email" required>
+                    <textarea name="Message" placeholder="Your Message" aria-label="Your message" required></textarea>
+                    <button type="submit" class="btn btn-primary" style="justify-content:center;">Send Message</button>
+                </form>
             </div>
-            <form class="contact-form" name="submit-to-google-sheet">
-                <input type="text" name="Name" placeholder="Your Name" required>
-                <input type="email" name="email" placeholder="Your Email" required>
-                <textarea name="Message" placeholder="Your Message" required></textarea>
-                <button type="submit" class="btn btn-primary">Send Message</button>
-            </form>
         </div>
     </section>
 
     <footer>
-        <p>Copyright © 2024 Arockia Wilfread. Made with <i class="fa-solid fa-heart" style="color: #ec4899;"></i> by a React Native Developer</p>
+        <p>© 2026 Arockia Wilfread · <span class="build">build 3.0.0</span> · Made with React Native energy</p>
     </footer>
+</main>
 
-    <script>
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-        });
+<nav class="tab-bar" id="tabBar" aria-label="Primary">
+    <a href="#home" data-target="home"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="#skills" data-target="skills"><i class="fa-solid fa-layer-group"></i><span>Skills</span></a>
+    <a href="#experience" data-target="experience"><i class="fa-solid fa-briefcase"></i><span>Work</span></a>
+    <a href="#projects" data-target="projects"><i class="fa-solid fa-mobile-screen"></i><span>Projects</span></a>
+    <a href="#contact" data-target="contact"><i class="fa-solid fa-paper-plane"></i><span>Contact</span></a>
+</nav>
 
-        // Mobile menu toggle
-        function toggleMenu() {
-            document.getElementById('menu').classList.toggle('active');
-        }
+<script>
+    // Live status-bar clock
+    function updateClock() {
+        const now = new Date();
+        let h = now.getHours();
+        const m = now.getMinutes().toString().padStart(2, '0');
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        document.getElementById('clock').textContent = `${h}:${m} ${ampm}`;
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
 
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    document.getElementById('menu').classList.remove('active');
-                }
-            });
-        });
-
-        // Form submission
-        const form = document.forms['submit-to-google-sheet'];
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxQd4ID1MEdgBZDv0larqVOebRCQ45cuLP8ZvYg21MdHm51U4kFMQi0XhL3K8bTJxj4/exec';
-        
-        form.addEventListener('submit', e => {
+    // Smooth scroll for tab-bar links
+    document.querySelectorAll('.tab-bar a').forEach(link => {
+        link.addEventListener('click', e => {
             e.preventDefault();
-            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
-                .then(response => {
-                    alert('Message sent successfully!');
-                    form.reset();
-                })
-                .catch(error => console.error('Error!', error.message));
+            const target = document.getElementById(link.dataset.target);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
+    });
 
-        // Intersection Observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all sections for animation
-        document.querySelectorAll('section').forEach(section => {
-            if (section.id !== 'header') {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(30px)';
-                section.style.transition = 'all 0.6s ease';
-                observer.observe(section);
+    // Scroll-spy: highlight active tab
+    const sections = document.querySelectorAll('main section[id]');
+    const tabs = document.querySelectorAll('.tab-bar a');
+    const spy = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                tabs.forEach(t => t.classList.toggle('active', t.dataset.target === entry.target.id));
             }
         });
-    </script>
+    }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+    sections.forEach(s => spy.observe(s));
+
+    // Fade-in on scroll
+    const fadeObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
+    document.querySelectorAll('main section:not(#home)').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(24px)';
+        section.style.transition = 'all 0.6s ease';
+        fadeObserver.observe(section);
+    });
+
+    // Contact form submission (Google Sheets webhook)
+    const form = document.forms['submit-to-google-sheet'];
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxQd4ID1MEdgBZDv0larqVOebRCQ45cuLP8ZvYg21MdHm51U4kFMQi0XhL3K8bTJxj4/exec';
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+            .then(() => { alert('Message sent successfully!'); form.reset(); })
+            .catch(err => console.error('Error!', err.message));
+    });
+</script>
 </body>
 </html>
